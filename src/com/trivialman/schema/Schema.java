@@ -1,33 +1,29 @@
 package com.trivialman.schema;
 
 import com.trivialman.Consts;
+import com.trivialman.function.Function;
+import com.trivialman.function.functionC2;
 
 /**
  * Created by TrivialMan on 28/02/2017.
  */
 public class Schema {
-    public double[] unit(int n){
-        double[] vals=new double[n];
-        for(int i=0;i<n;i++){
-            vals[i]=0;
-        }
-        return vals;
-    }
-    public Schema(){
-        int n=29;
-        double[] vals=unit(n);
-        double[] apprvals=resolve(0,1,vals);
-        double[] truevals=new double[n];
-        for(int i=0;i<n;i++){
-//            truevals[i]=((i+1)*(i+1)/(1.0*(n+1)*(n+1)));
-            truevals[i]=(i+1)/(1.0*(n+1));
+
+    public Schema(Function function,int nbreinter) throws Exception{
+        int n=nbreinter;
+        if(n<3) throw new Exception("Le nombre d'intervalle doit etre supérieure à 2");
+        double[] vals=((functionC2)function).getsecondprimevals(n);
+        double[] apprvals=resolve(function.value(Consts.START),function.value(Consts.END),vals);
+        double[] truevals=new double[n-1];
+        for(int i=0;i<n-1;i++){
+            truevals[i]=function.value((i+1)/(1.0*(n)));
         }
         double err=0;
-        for(int i=0;i<n;i++){
+        for(int i=0;i<n-1;i++){
             err+=Math.abs(truevals[i]-apprvals[i]);
             System.out.println("Valeurs approchées -> "+apprvals[i]+"\t Valeur réelle -> "+truevals[i]);
         }
-        err/=n;
+        err/=(n-1);
         System.out.println("erreur : "+err);
     }
 
