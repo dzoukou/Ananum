@@ -1,20 +1,15 @@
 package com.trivialman;
 
-import com.trivialman.function.Constant;
-import com.trivialman.function.Unit;
-import com.trivialman.function.X_cubed;
+import com.trivialman.Model.Test;
 import com.trivialman.function.X_squared;
-import com.trivialman.schema.Schema;
+import com.trivialman.Model.Model;
+import com.trivialman.function.myfunction;
 
 public class Main {
 
     public static void main(String[] args) {
 	// write your code here
 
-        try {
-            new Schema(new X_squared(),4);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        new Test(new myfunction(),-2,2,100);
     }
 }

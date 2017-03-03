@@ -1,41 +1,37 @@
-package com.trivialman.schema;
+package com.trivialman.Model;
 
-import com.trivialman.Consts;
 import com.trivialman.function.Function;
 import com.trivialman.function.functionC2;
 
 /**
  * Created by TrivialMan on 28/02/2017.
  */
-public class Schema {
+public class Model {
 
-    public Schema(Function function,int nbreinter) throws Exception{
-        int n=nbreinter;
+    public double[] solve(Function function, int n, double start,double end) throws Exception{
+
         if(n<3) throw new Exception("Le nombre d'intervalle doit etre supérieure à 2");
-        double[] vals=((functionC2)function).getsecondprimevals(n);
-        double[] apprvals=resolve(function.value(Consts.START),function.value(Consts.END),vals);
-        double[] truevals=new double[n-1];
-        for(int i=0;i<n-1;i++){
-            truevals[i]=function.value((i+1)/(1.0*(n)));
-        }
-        double err=0;
-        for(int i=0;i<n-1;i++){
-            err+=Math.abs(truevals[i]-apprvals[i]);
-            System.out.println("Valeurs approchées -> "+apprvals[i]+"\t Valeur réelle -> "+truevals[i]);
-        }
-        err/=(n-1);
-        System.out.println("erreur : "+err);
+        if(end-start<=0) throw new Exception("l'intervalle est mal définie");
+
+
+        double[] vals=((functionC2)function).getsecondprimevals(start,end,n);
+
+
+        double[] apprvals=resolve(function.value(start),function.value(end),start,end,vals);
+
+
+        return apprvals;
     }
 
-    public double[] resolve(double a,double b,double[] values){
+    public double[] resolve(double Ua,double Ub,double start,double end,double[] values){
 
         int n=values.length;
-        double h= (Consts.END-Consts.START)/(n+1);
+        double h= (end-start)/(n+1);
         System.out.println("Pas -> "+h);
 
         // Finalisation du Système
-        values[0]+=(a/(h*h));
-        values[n-1]+=(b/(h*h));
+        values[0]+=(Ua/(h*h));
+        values[n-1]+=(Ub/(h*h));
         // Variables de la décomposition LU
         double[] L_b=new double[n];
         double[] U_c=new double[n-1];
@@ -71,7 +67,7 @@ public class Schema {
 
         //Finalisation
         for(int i=0;i<n;i++){
-            X[i]*=h*h;
+            X[i]*=(h*h);
         }
 
         // Renvoie de la solution du système
